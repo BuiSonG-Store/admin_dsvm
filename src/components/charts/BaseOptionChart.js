@@ -1,6 +1,6 @@
 // material
-import { alpha, useTheme } from '@mui/material/styles';
-import { GlobalStyles } from '@mui/material';
+import {alpha, useTheme} from '@mui/material/styles';
+import {GlobalStyles} from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -24,8 +24,8 @@ export function BaseOptionChartStyle() {
                         boxShadow: theme.customShadows.z24,
                         color: theme.palette.text.primary,
                         borderRadius: theme.shape.borderRadiusSm,
-                        '&:before': { borderBottomColor: 'transparent' },
-                        '&:after': { borderBottomColor: alpha(theme.palette.background.default, 0.72) }
+                        '&:before': {borderBottomColor: 'transparent'},
+                        '&:after': {borderBottomColor: alpha(theme.palette.background.default, 0.72)}
                     },
                     '.apexcharts-tooltip.apexcharts-theme-light': {
                         ...background,
@@ -90,8 +90,8 @@ export default function baseOptionChart() {
 
         // Chart
         chart: {
-            toolbar: { show: false },
-            zoom: { enabled: false },
+            toolbar: {show: false},
+            zoom: {enabled: false},
             // animations: { enabled: false },
             foreColor: theme.palette.text.disabled,
             fontFamily: theme.typography.fontFamily
@@ -126,7 +126,7 @@ export default function baseOptionChart() {
         },
 
         // Datalabels
-        dataLabels: { enabled: false },
+        dataLabels: {enabled: false},
 
         // Stroke
         stroke: {
@@ -143,8 +143,8 @@ export default function baseOptionChart() {
 
         // Xaxis
         xaxis: {
-            axisBorder: { show: false },
-            axisTicks: { show: false }
+            axisBorder: {show: false},
+            axisTicks: {show: false}
         },
 
         // Markers
@@ -170,7 +170,7 @@ export default function baseOptionChart() {
                 radius: 12
             },
             fontWeight: 500,
-            itemMargin: { horizontal: 12 },
+            itemMargin: {horizontal: 12},
             labels: {
                 colors: theme.palette.text.primary
             }
@@ -207,7 +207,7 @@ export default function baseOptionChart() {
             // Radar
             radar: {
                 polygons: {
-                    fill: { colors: ['transparent'] },
+                    fill: {colors: ['transparent']},
                     strokeColors: theme.palette.divider,
                     connectorColors: theme.palette.divider
                 }
@@ -229,14 +229,14 @@ export default function baseOptionChart() {
                 // sm
                 breakpoint: theme.breakpoints.values.sm,
                 options: {
-                    plotOptions: { bar: { columnWidth: '40%' } }
+                    plotOptions: {bar: {columnWidth: '40%'}}
                 }
             },
             {
                 // md
                 breakpoint: theme.breakpoints.values.md,
                 options: {
-                    plotOptions: { bar: { columnWidth: '32%' } }
+                    plotOptions: {bar: {columnWidth: '32%'}}
                 }
             }
         ]

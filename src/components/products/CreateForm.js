@@ -6,74 +6,67 @@ import {
     TextField,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { postProduct } from '../../store/slice/products';
+import {editProduct, postProduct} from '../../store/slice/products';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-
 // ----------------------------------------------------------------------
 
-export default function CreateForm() {
+export default function CreateForm(props) {
     const dispatch=useDispatch();
-    const navigate=useNavigate();
-    const [img,setImg]=useState();
+    const productEdit=props.dataEdit.product;
+    // const imageEdit=props.dataEdit.image;
+
+    const initialValues={
+        Name: productEdit?productEdit.name:'',
+        Description: productEdit?productEdit.description:'',
+        Price: productEdit?productEdit.price:0.0,
+        PriceSale:productEdit?productEdit.priceSale:0.0,
+        CategoryId:productEdit?productEdit.regionId:'',
+        RegionId:productEdit?productEdit.categoryId:'',
+    };
+
     const ProductSchema = Yup.object().shape({
         Name: Yup.string().required(),
         Description: Yup.string().required(),
         Price: Yup.number().required(),
         PriceSale: Yup.number(),
         CategoryId: Yup.number().required(),
-        Image: Yup.string().required(),
     });
 
     const formik = useFormik({
-        initialValues: {
-            Name: '',
-            Description: '',
-            Price: 0.0,
-            PriceSale:0.0,
-            CategoryId:'',
-            RegionId:'',
-            Image:''
-        },
+        initialValues,
         validationSchema: ProductSchema,
+
         onSubmit: async (values,{resetForm}) => {
             try {
-                const res = await dispatch(postProduct({
-                    Name: values.Name,
-                    Description: values.Description,
-                    Price: values.Price,
-                    PriceSale: values.PriceSale,
-                    CategoryId: values.CategoryId,
-                    RegionId: values.RegionId,
-                    Image:values.Image
-                }));
+                const res = await productEdit ?
+                    dispatch(editProduct({
+                        id:productEdit.id,
+                        Name: values.Name,
+                        Description: values.Description,
+                        Price: values.Price,
+                        PriceSale: values.PriceSale,
+                        CategoryId: values.CategoryId,
+                        RegionId: values.RegionId,
+                    }))
+
+                    :dispatch(postProduct({
+                        Name: values.Name,
+                        Description: values.Description,
+                        Price: values.Price,
+                        PriceSale: values.PriceSale,
+                        CategoryId: values.CategoryId,
+                        RegionId: values.RegionId,
+                    }))
+                ;
                 unwrapResult(res);
+                props.handleFormSubmit(productEdit);
                 resetForm();
-                navigate('/dashboard', { replace: true });
             } catch (e) {
                 console.log(e);
             }
         }
     });
-
-    const showPreview=(e)=>{
-        if(e.target.files&& e.target.files[0]){
-            let imageFile=e.target.files[0];
-            const reader=new FileReader();
-            reader.onload= x=>{
-                setImg({
-                    imageFile,
-                    imageSrc:x.target.result
-                });
-            };
-            reader.readAsDataURL((imageFile));
-
-        }
-    };
-
-    console.log(img);
 
     const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
 
@@ -100,17 +93,6 @@ export default function CreateForm() {
                         {...getFieldProps('Description')}
                         error={Boolean(touched.Description && errors.Description)}
                         helperText={touched.Description && errors.Description}
-                    />
-                    <TextField
-                        fullWidth
-                        accept="image/*"
-                        autoComplete='productImage'
-                        type='file'
-                        value={values.Image}
-                        {...getFieldProps('Image')}
-                        error={Boolean(touched.Image && errors.Image)}
-                        helperText={touched.Image && errors.Image}
-                        onChange={showPreview}
                     />
                     <TextField
                         fullWidth

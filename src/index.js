@@ -11,17 +11,20 @@ import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './store';
+import {CookiesProvider} from 'react-cookie';
 
 // ----------------------------------------------------------------------
 
 ReactDOM.render(
-    <Provider store={store}>
-        <HelmetProvider>
-            <BrowserRouter>
-                <App />
-            </BrowserRouter>
-        </HelmetProvider>
-    </Provider>,
+    <CookiesProvider>
+        <Provider store={store}>
+            <HelmetProvider>
+                <BrowserRouter>
+                    <App />
+                </BrowserRouter>
+            </HelmetProvider>
+        </Provider>
+    </CookiesProvider>,
     document.getElementById('root')
 );
 

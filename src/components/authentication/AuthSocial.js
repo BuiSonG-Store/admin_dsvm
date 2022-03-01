@@ -4,13 +4,27 @@ import twitterFill from '@iconify/icons-eva/twitter-fill';
 import facebookFill from '@iconify/icons-eva/facebook-fill';
 // material
 import { Stack, Button, Divider, Typography } from '@mui/material';
+import GoogleLogin from 'react-google-login';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
-
+const url='https://localhost:44349/api/Accounts/external-login';
 export default function AuthSocial() {
+    const responseGoogle = (response) => {
+        axios.post(url,{
+            provider:'Google',
+            returnUrl:'dashboard/app'
+        });
+        console.log(response);
+    };
     return (
         <>
             <Stack direction='row' spacing={2}>
+                <GoogleLogin clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                    buttonText="Login"
+                    onSuccess={responseGoogle}
+                    onFailure={responseGoogle}
+                    cookiePolicy={'single_host_origin'}/>
                 <Button fullWidth size='large' color='inherit' variant='outlined'>
                     <Icon icon={googleFill} color='#DF3E30' height={24} />
                 </Button>

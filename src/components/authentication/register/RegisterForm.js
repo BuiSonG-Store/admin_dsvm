@@ -1,101 +1,126 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
-import { Icon } from '@iconify/react';
-import { useFormik, Form, FormikProvider } from 'formik';
+import {useState} from 'react';
+import {Icon} from '@iconify/react';
+import {useFormik, Form, FormikProvider} from 'formik';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 // material
-import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import {Stack, TextField, IconButton, InputAdornment} from '@mui/material';
+import {LoadingButton} from '@mui/lab';
+import {userRegister} from '../../../store/slice/register';
+import {unwrapResult} from '@reduxjs/toolkit';
+import {useDispatch} from 'react-redux';
+import {setSessionStorage} from '../../../utils/sessionStorage';
 
 // ----------------------------------------------------------------------
+
+Date.prototype.addDays = function(days) {
+    const date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+};
 
 export default function RegisterForm() {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
+    const dispatch = useDispatch();
 
     const RegisterSchema = Yup.object().shape({
-        firstName: Yup.string()
-            .min(2, 'Too Short!')
-            .max(50, 'Too Long!')
-            .required('First name required'),
-        lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
-        email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-        password: Yup.string().required('Password is required')
+        Name: Yup.string().required(),
+        AccountPassword: Yup.string().required().min(6),
+        PhoneNumber: Yup.string().required().max(10),
+        Gmail: Yup.string().required().email(),
+        Role: Yup.string().default('user'),
     });
+
 
     const formik = useFormik({
         initialValues: {
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: ''
+            Name: '',
+            AccountPassword: '',
+            PhoneNumber: '',
+            Gmail: '',
         },
         validationSchema: RegisterSchema,
-        onSubmit: () => {
-            navigate('/dashboard', { replace: true });
+        onSubmit: async (values,{resetForm}) => {
+            try {
+                const res=await  dispatch(userRegister({
+                    name: values.Name,
+                    accountPassword: values.AccountPassword,
+                    phoneNumber: values.PhoneNumber,
+                    gmail: values.Gmail
+                }));
+                unwrapResult(res);
+                const user=res.payload;
+                setSessionStorage(user);
+                resetForm();
+                navigate('/dashboard/app', {replace: true});
+            }catch (e) {
+                console.log(e);
+            }
+
         }
     });
 
-    const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+    const {errors, touched, handleSubmit, isSubmitting, getFieldProps} = formik;
 
     return (
         <FormikProvider value={formik}>
-            <Form autoComplete='off' noValidate onSubmit={handleSubmit}>
+            <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
                 <Stack spacing={3}>
-                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                    <Stack direction={{xs: 'column', sm: 'row'}} spacing={2}>
                         <TextField
                             fullWidth
-                            label='First name'
-                            {...getFieldProps('firstName')}
-                            error={Boolean(touched.firstName && errors.firstName)}
-                            helperText={touched.firstName && errors.firstName}
+                            label="Name"
+                            {...getFieldProps('Name')}
+                            error={Boolean(touched.Name && errors.Name)}
+                            helperText={touched.Name && errors.Name}
                         />
 
                         <TextField
                             fullWidth
-                            label='Last name'
-                            {...getFieldProps('lastName')}
-                            error={Boolean(touched.lastName && errors.lastName)}
-                            helperText={touched.lastName && errors.lastName}
+                            label="Phone Number"
+                            {...getFieldProps('PhoneNumber')}
+                            error={Boolean(touched.PhoneNumber && errors.PhoneNumber)}
+                            helperText={touched.PhoneNumber && errors.PhoneNumber}
                         />
                     </Stack>
 
                     <TextField
                         fullWidth
-                        autoComplete='username'
-                        type='email'
-                        label='Email address'
-                        {...getFieldProps('email')}
-                        error={Boolean(touched.email && errors.email)}
-                        helperText={touched.email && errors.email}
+                        autoComplete="username"
+                        type="email"
+                        label="Email address"
+                        {...getFieldProps('Gmail')}
+                        error={Boolean(touched.Gmail && errors.Gmail)}
+                        helperText={touched.Gmail && errors.Gmail}
                     />
 
                     <TextField
                         fullWidth
-                        autoComplete='current-password'
+                        autoComplete="current-password"
                         type={showPassword ? 'text' : 'password'}
-                        label='Password'
-                        {...getFieldProps('password')}
+                        label="Password"
+                        {...getFieldProps('AccountPassword')}
                         InputProps={{
                             endAdornment: (
-                                <InputAdornment position='end'>
-                                    <IconButton edge='end' onClick={() => setShowPassword((prev) => !prev)}>
-                                        <Icon icon={showPassword ? eyeFill : eyeOffFill} />
+                                <InputAdornment position="end">
+                                    <IconButton edge="end" onClick={() => setShowPassword((prev) => !prev)}>
+                                        <Icon icon={showPassword ? eyeFill : eyeOffFill}/>
                                     </IconButton>
                                 </InputAdornment>
                             )
                         }}
-                        error={Boolean(touched.password && errors.password)}
-                        helperText={touched.password && errors.password}
+                        error={Boolean(touched.AccountPassword && errors.AccountPassword)}
+                        helperText={touched.AccountPassword && errors.AccountPassword}
                     />
 
                     <LoadingButton
                         fullWidth
-                        size='large'
-                        type='submit'
-                        variant='contained'
+                        size="large"
+                        type="submit"
+                        variant="contained"
                         loading={isSubmitting}
                     >
                         Register

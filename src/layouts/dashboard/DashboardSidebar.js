@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
@@ -11,7 +11,6 @@ import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
 //
 import sidebarConfig from './SidebarConfig';
-import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -40,15 +39,11 @@ DashboardSidebar.propTypes = {
 };
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
-    const [account,setAccount]=useState([]);
-    const store=useSelector(state=>state.login);
-
+    const name=sessionStorage.getItem('userName');
+    const gmail=sessionStorage.getItem('userGmail');
+    const photoURL= '/static/mock-images/avatars/avatar_default.jpg';
 
     const { pathname } = useLocation();
-
-    useEffect(()=>{
-        setAccount({...store.data, photoURL: '/static/mock-images/avatars/avatar_default.jpg'});
-    },[]);
 
     useEffect(() => {
         if (isOpenSidebar) {
@@ -72,13 +67,13 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             <Box sx={{ mb: 5, mx: 2.5 }}>
                 <Link underline='none' component={RouterLink} to='#'>
                     <AccountStyle>
-                        <Avatar src={account.photoURL} alt='photoURL' />
+                        <Avatar src={photoURL} alt='photoURL' />
                         <Box sx={{ ml: 2 }}>
                             <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
-                                {account.name}
+                                {name}
                             </Typography>
                             <Typography variant='body2' sx={{ color: 'text.secondary' }}>
-                                {account.role}
+                                {gmail}
                             </Typography>
                         </Box>
                     </AccountStyle>

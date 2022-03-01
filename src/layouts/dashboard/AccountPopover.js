@@ -1,16 +1,17 @@
-import { Icon } from '@iconify/react';
-import { useEffect, useRef, useState } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
 import settings2Fill from '@iconify/icons-eva/settings-2-fill';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import { Avatar, Box, Button, Divider, IconButton, MenuItem, Typography } from '@mui/material';
 // material
 import { alpha } from '@mui/material/styles';
-import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
+import { useRef, useState } from 'react';
+//
+import { useDispatch } from 'react-redux';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { removeUser } from '../../utils/sessionStorage';
 // components
 import MenuPopover from '../../components/MenuPopover';
-//
-import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/slice/loginAndLogout';
 
 // ----------------------------------------------------------------------
@@ -37,12 +38,10 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
     const navigate = useNavigate();
-    const [account,setAccount]=useState([]);
-    const store=useSelector(state=>state.login);
-    const dispatch=useDispatch();
-    useEffect(()=>{
-        setAccount({...store.data, photoURL: '/static/mock-images/avatars/avatar_default.jpg'});
-    },store.data);
+    const dispatch = useDispatch();
+    const name = sessionStorage.getItem('userName');
+    const gmail = sessionStorage.getItem('userGmail');
+    const photoURL = '/static/mock-images/avatars/avatar_default.jpg';
 
     const anchorRef = useRef(null);
     const [open, setOpen] = useState(false);
@@ -54,8 +53,9 @@ export default function AccountPopover() {
         setOpen(false);
     };
 
-    const handleLogout=()=>{
+    const handleLogout = () => {
         dispatch(logout());
+        removeUser();
         navigate('/login', { replace: true });
     };
 
@@ -71,7 +71,7 @@ export default function AccountPopover() {
                     ...(open && {
                         '&:before': {
                             zIndex: 1,
-                            content: '\'\'',
+                            content: '""',
                             width: '100%',
                             height: '100%',
                             borderRadius: '50%',
@@ -81,7 +81,7 @@ export default function AccountPopover() {
                     })
                 }}
             >
-                <Avatar src={account.photoURL} alt='photoURL' />
+                <Avatar src={photoURL} alt="photoURL" />
             </IconButton>
 
             <MenuPopover
@@ -91,11 +91,11 @@ export default function AccountPopover() {
                 sx={{ width: 220 }}
             >
                 <Box sx={{ my: 1.5, px: 2.5 }}>
-                    <Typography variant='subtitle1' noWrap>
-                        {account.name}
+                    <Typography variant="subtitle1" noWrap>
+                        {name}
                     </Typography>
-                    <Typography variant='body2' sx={{ color: 'text.secondary' }} noWrap>
-                        {account.gmail}
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                        {gmail}
                     </Typography>
                 </Box>
 
@@ -123,8 +123,9 @@ export default function AccountPopover() {
                     </MenuItem>
                 ))}
 
+                <Divider sx={{ my: 1 }} />
                 <Box sx={{ p: 2, pt: 1.5 }}>
-                    <Button fullWidth color='inherit' variant='outlined' onClick={handleLogout}>
+                    <Button fullWidth color="inherit" variant="outlined" onClick={handleLogout}>
                         Logout
                     </Button>
                 </Box>

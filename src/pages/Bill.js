@@ -1,14 +1,10 @@
 import {filter} from 'lodash';
-import {Icon} from '@iconify/react';
 import {useEffect, useState} from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
-import {Link as RouterLink} from 'react-router-dom';
 // material
 import {
     Card,
     Table,
     Stack,
-    Button,
     Checkbox,
     TableRow,
     TableBody,
@@ -26,18 +22,21 @@ import {UserListHead, UserListToolbar, UserMoreMenu} from '../components/_dashbo
 //
 import {unwrapResult} from '@reduxjs/toolkit';
 import {useDispatch} from 'react-redux';
-import {getUserById, getUsers} from '../store/slice/user';
+import {getUserById} from '../store/slice/user';
 import CreateForm from '../components/users/CreateForm';
+import {getBills} from '../store/slice/bill';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-    {id: 'name', label: 'Name', alignRight: false},
+    {id: 'userName', label: 'User Name', alignRight: false},
     {id: 'phoneNumber', label: 'Phone Number', alignRight: false},
-    {id: 'facebook', label: 'FaceBook', alignRight: false},
-    {id: 'gmail', label: 'Gmail', alignRight: false},
     {id: 'address', label: 'Address', alignRight: false},
-    {id: 'role', label: 'Role', alignRight: false},
+    {id: 'productName', label: 'Product Name', alignRight: false},
+    {id: 'productPrice', label: 'Product Price', alignRight: false},
+    {id: 'total', label: 'Total', alignRight: false},
+    {id: 'oderTime', label: 'Oder Time', alignRight: false},
+    {id: 'status', label: 'Status', alignRight: false},
     {id: ''}
 ];
 
@@ -74,7 +73,7 @@ function applySortFilter(array, comparator, query) {
     return stabilizedThis.map((el) => el[0]);
 }
 
-export default function User() {
+export default function Bill() {
     const [data,setData]=useState([]);
     const dispatch=useDispatch();
     const [page, setPage] = useState(0);
@@ -86,15 +85,14 @@ export default function User() {
     const [openForm,setOpenForm]=useState(false);
     const [dataEdit,setDataEdit]=useState([]);
     const [isEdit,setIsEdit]=useState([]);
-    const [isDelete,setIsDelete]=useState([]);
 
     useEffect(()=>{
         fetchData();
-    },[isEdit,isDelete]);
+    },[isEdit]);
 
     const fetchData = async () => {
         try {
-            const res = await dispatch(getUsers());
+            const res = await dispatch(getBills());
             setData(res.payload);
             unwrapResult(res);
         } catch (e) {
@@ -166,14 +164,14 @@ export default function User() {
         }
     };
 
-    const handleDelete=(value)=>{
+    const handleDelete=()=>{
         setSelected([]);
-        value&&setIsDelete(value);
     };
 
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
     const filteredUsers = applySortFilter(data, getComparator(order, orderBy), filterName);
+    console.log(filteredUsers);
 
     const isUserNotFound = filteredUsers.length === 0;
 
@@ -182,17 +180,8 @@ export default function User() {
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
-                        User
+                        Bill
                     </Typography>
-                    <Button
-                        variant="contained"
-                        component={RouterLink}
-                        to="#"
-                        startIcon={<Icon icon={plusFill}/>}
-                        onClick={()=>setOpenForm(!openForm)}
-                    >
-                        New User
-                    </Button>
                 </Stack>
 
                 {openForm&&<CreateForm  dataEdit={dataEdit} handleSubmit={handleSubmit}/>}
@@ -222,7 +211,7 @@ export default function User() {
                                     {filteredUsers
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         .map((row) => {
-                                            const {id, name, role, phoneNumber, faceBook, gmail,userAddress} = row;
+                                            const {id, total, oderTime,status,productName,productPrice,userName,phoneNumber,address} = row;
                                             const isItemSelected = selected.indexOf(id) !== -1;
 
                                             return (
@@ -243,15 +232,17 @@ export default function User() {
                                                     <TableCell component="th" scope="row" padding="none">
                                                         <Stack direction="row" alignItems="center" spacing={2}>
                                                             <Typography variant="subtitle2" noWrap>
-                                                                {name}
+                                                                {userName}
                                                             </Typography>
                                                         </Stack>
                                                     </TableCell>
                                                     <TableCell align="left">{phoneNumber}</TableCell>
-                                                    <TableCell align="left">{faceBook}</TableCell>
-                                                    <TableCell align="left">{gmail}</TableCell>
-                                                    <TableCell align="left">{userAddress}</TableCell>
-                                                    <TableCell align="left">{role}</TableCell>
+                                                    <TableCell align="left">{address}</TableCell>
+                                                    <TableCell align="left">{productName}</TableCell>
+                                                    <TableCell align="left">{productPrice}</TableCell>
+                                                    <TableCell align="left">{total}</TableCell>
+                                                    <TableCell align="left">{oderTime}</TableCell>
+                                                    <TableCell align="left">{status}</TableCell>
 
                                                     <TableCell align="right">
                                                         <UserMoreMenu userId={id} clickButtonEdit={clickButtonEdit}/>

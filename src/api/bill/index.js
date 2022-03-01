@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-export const product = {
-    getData: async (params) => {
-        return await axios.get(`http://localhost:8080/device_by_hour?startDate=${params.startDate}&endDate=${params.endDate}`);
-    }
+const url = 'https://localhost:44349/api/';
+export const billApi = {
+    getData: async () => {
+        return await axios.get(url+'Bills');
+    },
 };

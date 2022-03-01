@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 // material
-import { Box, Card, Link, Typography, Stack } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import {Box, Card, Link, Typography, Stack, Checkbox, TableCell} from '@mui/material';
+import {styled} from '@mui/material/styles';
 // utils
-import { fCurrency } from '../../../utils/formatNumber';
+import {fCurrency} from '../../../utils/formatNumber';
 //
-import Label from '../../Label';
 // ----------------------------------------------------------------------
+const urlImage = 'https://localhost:44349/uploads/';
 
 const ProductImgStyle = styled('img')({
     top: 0,
@@ -23,55 +23,47 @@ ShopProductCard.propTypes = {
     product: PropTypes.object
 };
 
-export default function ShopProductCard({ product }) {
-    const { name, price, priceSale,imageSrc } = product;
+export default function ShopProductCard({item, isClick, handleClick, selected}) {
+
+    const {name, price, priceSale, id} = item.product;
+    const imageSrc = urlImage + item.image;
+    const isItemSelected = selected.indexOf(id) !== -1;
 
     return (
         <Card>
-            <Box sx={{ pt: '100%', position: 'relative' }}>
-                {status && (
-                    <Label
-                        variant='filled'
-                        color={(status === 'sale' && 'error') || 'info'}
-                        sx={{
-                            zIndex: 9,
-                            top: 16,
-                            right: 16,
-                            position: 'absolute',
-                            textTransform: 'uppercase'
-                        }}
-                    >
-                        {status}
-                    </Label>
-                )}
-                <ProductImgStyle alt={name} src={imageSrc} />
+            <Box sx={{pt: '100%', position: 'relative'}}>
+                <ProductImgStyle alt={name} src={imageSrc}/>
             </Box>
 
-            <Stack spacing={2} sx={{ p: 3 }}>
-                <Link to='#' color='inherit' underline='hover' component={RouterLink}>
-                    <Typography variant='subtitle2' noWrap>
+            <Stack spacing={2} sx={{p: 3}}>
+                <Link to="#" color="inherit" underline="hover" component={RouterLink}>
+                    <Typography variant="subtitle2" noWrap onClick={() => isClick(id)}>
                         {name}
                     </Typography>
                 </Link>
-
-                <Stack direction='row' alignItems='center' justifyContent='space-between'>
-                    {/*<ColorPreview />*/}
-                    <Typography variant='subtitle1'>
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <Typography variant="subtitle1">
                         Price:
                         <Typography
-                            component='span'
-                            variant='body1'
+                            component="span"
+                            variant="body1"
                             sx={{
                                 color: 'text.disabled',
                                 textDecoration: 'line-through',
-                                marginLeft:'20px'
+                                marginLeft: '20px'
                             }}
                         >
                             {priceSale && fCurrency(price)}
                         </Typography>
                         &nbsp;
-                        {priceSale ? fCurrency(priceSale):fCurrency(price)}
+                        {priceSale ? fCurrency(priceSale) : fCurrency(price)}
                     </Typography>
+                    <TableCell padding='checkbox'>
+                        <Checkbox
+                            checked={isItemSelected}
+                            onChange={(event) => handleClick(event, id)}
+                        />
+                    </TableCell>
                 </Stack>
             </Stack>
         </Card>

@@ -11,11 +11,11 @@ export const userApi = {
     deleteUser: async (id,config) => {
         return await axios.delete(url + `Accounts/${id}`,config);
     },
-    editUser: async (data,config) => {
-        return await axios.put(url + `Accounts/${data.id}`, data,config);
+    editUser: async (data) => {
+        return await axios.put(url + `Accounts/${data.id}`, data);
     },
     getUserById: async (id)=>{
-        return await  axios.get(url+`Accounts/${id}`);
+        return await  axios.get(url+`Accounts/id?id=${id}`);
     },
 
 };

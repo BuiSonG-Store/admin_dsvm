@@ -20,7 +20,6 @@ export default function CreateForm(props) {
         AccountPassword: userEdit?userEdit.accountPassword:'',
         PhoneNumber: userEdit?userEdit.phoneNumber:'',
         Gmail:userEdit?userEdit.gmail:'',
-        Role:userEdit?userEdit.role:'',
     };
 
     const initialValues=userEdit?{...formValue,FaceBook:userEdit.facebook,UserAddress: userEdit.userAddress}:formValue;
@@ -31,7 +30,6 @@ export default function CreateForm(props) {
         PhoneNumber: Yup.string().required().max(10),
         UserAddress: Yup.string().required(),
         Gmail: Yup.string().required().email(),
-        Role: Yup.string().default('user'),
     });
 
     const formik = useFormik({
@@ -39,7 +37,7 @@ export default function CreateForm(props) {
         validationSchema: UserSchema,
         onSubmit: async (values,{resetForm}) => {
             try {
-                const res = await userEdit.length>0 ?
+                const res = await userEdit ?
                     dispatch(editUser({
                         id:userEdit.id,
                         name: values.Name,
@@ -48,14 +46,12 @@ export default function CreateForm(props) {
                         userAddress: values.UserAddress,
                         facebook: values.FaceBook,
                         gmail: values.Gmail,
-                        role: values.Role,
                     }))
                     :dispatch(userRegister({
                         name: values.Name,
                         accountPassword: values.AccountPassword,
                         phoneNumber: values.PhoneNumber,
                         gmail: values.Gmail,
-                        role: values.Role,
                     }))
                 ;
                 unwrapResult(res);
@@ -133,16 +129,6 @@ export default function CreateForm(props) {
                         {...getFieldProps('Gmail')}
                         error={Boolean(touched.Gmail && errors.Gmail)}
                         helperText={touched.Gmail && errors.Gmail}
-                    />
-                    <TextField
-                        fullWidth
-                        autoComplete='Role'
-                        type='text'
-                        label='Role'
-                        value={values.Role}
-                        {...getFieldProps('Role')}
-                        error={Boolean(touched.Role && errors.Role)}
-                        helperText={touched.Role && errors.Role}
                     />
                 </Stack>
 

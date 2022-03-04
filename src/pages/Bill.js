@@ -5,7 +5,6 @@ import {
     Card,
     Table,
     Stack,
-    Checkbox,
     TableRow,
     TableBody,
     TableCell,
@@ -22,9 +21,8 @@ import {UserListHead, UserListToolbar, UserMoreMenu} from '../components/_dashbo
 //
 import {unwrapResult} from '@reduxjs/toolkit';
 import {useDispatch} from 'react-redux';
-import {getUserById} from '../store/slice/user';
-import CreateForm from '../components/users/CreateForm';
-import {getBills} from '../store/slice/bill';
+import {getBillById, getBills} from '../store/slice/bill';
+import FormEditStatus from '../components/bill/FormEditStatus';
 
 // ----------------------------------------------------------------------
 
@@ -68,7 +66,7 @@ function applySortFilter(array, comparator, query) {
         return a[1] - b[1];
     });
     if (query) {
-        return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+        return filter(array, (_user) => _user.phoneNumber.toLowerCase().indexOf(query.toLowerCase()) !== -1);
     }
     return stabilizedThis.map((el) => el[0]);
 }
@@ -94,6 +92,7 @@ export default function Bill() {
         try {
             const res = await dispatch(getBills());
             setData(res.payload);
+            console.log(res.payload);
             unwrapResult(res);
         } catch (e) {
             console.log(e);
@@ -122,23 +121,6 @@ export default function Bill() {
         setSelected([]);
     };
 
-    const handleClick = (event, id) => {
-        const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1)
-            );
-        }
-        setSelected(newSelected);
-    };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -155,7 +137,7 @@ export default function Bill() {
 
     const clickButtonEdit=async(id)=>{
         try {
-            const res = await dispatch(getUserById(id));
+            const res = await dispatch(getBillById(id));
             setDataEdit(res.payload);
             setOpenForm(true);
             unwrapResult(res);
@@ -170,10 +152,12 @@ export default function Bill() {
 
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
-    const filteredUsers = applySortFilter(data, getComparator(order, orderBy), filterName);
-    console.log(filteredUsers);
+    const filteredBills = applySortFilter(data, getComparator(order, orderBy), filterName);
 
-    const isUserNotFound = filteredUsers.length === 0;
+
+    console.log(data);
+
+    const isUserNotFound = filteredBills.length === 0;
 
     return (
         <Page title="User | Minimal-UI">
@@ -184,7 +168,7 @@ export default function Bill() {
                     </Typography>
                 </Stack>
 
-                {openForm&&<CreateForm  dataEdit={dataEdit} handleSubmit={handleSubmit}/>}
+                {openForm&&<FormEditStatus  dataEdit={dataEdit} handleSubmit={handleSubmit}/>}
 
                 <Card>
                     <UserListToolbar
@@ -199,6 +183,7 @@ export default function Bill() {
                         <TableContainer sx={{minWidth: 800}}>
                             <Table>
                                 <UserListHead
+                                    notCheckBox={true}
                                     order={order}
                                     orderBy={orderBy}
                                     headLabel={TABLE_HEAD}
@@ -208,28 +193,36 @@ export default function Bill() {
                                     onSelectAllClick={handleSelectAllClick}
                                 />
                                 <TableBody>
-                                    {filteredUsers
+                                    {filteredBills.reduce((prev,next)=>{
+                                        const isExist=prev.findIndex(item=>item.id===next.id);
+                                        if(isExist<0){
+                                            return prev.concat(next);
+                                        }
+                                        const ls= prev.map((item,index)=>{
+                                            if (index===isExist){
+                                                return {...item,
+                                                    productName:[item.productName,next.productName],
+                                                    productPrice:[item.productPrice,next.productPrice]
+                                                };
+                                            }
+                                            return item;
+                                        });
+                                        console.log(ls);
+                                        return ls;
+                                    },[])
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        .map((row) => {
+                                        .map((row,index) => {
                                             const {id, total, oderTime,status,productName,productPrice,userName,phoneNumber,address} = row;
+                                            console.log(productPrice);
                                             const isItemSelected = selected.indexOf(id) !== -1;
-
                                             return (
                                                 <TableRow
                                                     hover
-                                                    key={id}
+                                                    key={index}
                                                     tabIndex={-1}
-                                                    role="checkbox"
-                                                    selected={isItemSelected}
                                                     aria-checked={isItemSelected}
                                                 >
-                                                    <TableCell padding="checkbox">
-                                                        <Checkbox
-                                                            checked={isItemSelected}
-                                                            onChange={(event) => handleClick(event, id)}
-                                                        />
-                                                    </TableCell>
-                                                    <TableCell component="th" scope="row" padding="none">
+                                                    <TableCell component="th" scope="row" padding="30px">
                                                         <Stack direction="row" alignItems="center" spacing={2}>
                                                             <Typography variant="subtitle2" noWrap>
                                                                 {userName}
@@ -237,9 +230,9 @@ export default function Bill() {
                                                         </Stack>
                                                     </TableCell>
                                                     <TableCell align="left">{phoneNumber}</TableCell>
-                                                    <TableCell align="left">{address}</TableCell>
-                                                    <TableCell align="left">{productName}</TableCell>
-                                                    <TableCell align="left">{productPrice}</TableCell>
+                                                    <TableCell align="left" style={{overflowWrap: 'anywhere'}}>{address}</TableCell>
+                                                    <TableCell align="left" style={{overflowWrap: 'anywhere'}}>{typeof productName==='string'?productName:productName.join(' - ')}</TableCell>
+                                                    <TableCell align="left" style={{overflowWrap: 'anywhere'}}>{typeof productPrice==='number'?productPrice:productPrice.join(' - ')}</TableCell>
                                                     <TableCell align="left">{total}</TableCell>
                                                     <TableCell align="left">{oderTime}</TableCell>
                                                     <TableCell align="left">{status}</TableCell>

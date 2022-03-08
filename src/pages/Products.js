@@ -62,6 +62,7 @@ export default function EcommerceShop() {
     const dispatch = useDispatch();
     const [data, setData] = useState([]);
     const [dataEdit, setDataEdit] = useState([]);
+    const [productEdit, setProductEdit] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
     const [submitImage, setSubmitImage] = useState(false);
@@ -147,7 +148,9 @@ export default function EcommerceShop() {
         try {
             const res = await dispatch(getProductById(id));
             setDataEdit(res.payload);
+            setProductEdit(res.payload.product.id);
             setOpenForm(true);
+            setOpenImageForm(true);
             unwrapResult(res);
         } catch (e) {
             console.log(e);
@@ -179,7 +182,7 @@ export default function EcommerceShop() {
                 </Stack>
 
                 {openForm && <CreateForm handleFormSubmit={handleFormSubmit} dataEdit={dataEdit}/>}
-                {openImageForm && <CreateFormImage submitImage={handleSubmitImage} id={store.postData.id}/>}
+                {openImageForm && <CreateFormImage submitImage={handleSubmitImage} id={store.postData.id} productEdit={productEdit}/>}
                 <Stack
                     direction="row"
                     flexWrap="wrap-reverse"

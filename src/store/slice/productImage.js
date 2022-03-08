@@ -17,6 +17,10 @@ export const postProductImage= createAsyncThunk('Post Product Image',async (para
     const res = await productApi.postImage(params,{headers});
     return res.data;
 });
+export const editProductImage= createAsyncThunk('Edit Product Image',async (params)=>{
+    const res = await productApi.editProductImage(params,{headers});
+    return res.data;
+});
 const products = createSlice({
     name: 'product image',
     initialState,
@@ -32,6 +36,16 @@ const products = createSlice({
             state.data = action.payload;
         },
         [postProductImage.rejected]: (state, action) => {
+            state.pending = false;
+            state.failed = true;
+            state.message = action.error.message;
+        },
+        [editProductImage.fulfilled]: (state, action) => {
+            state.pending = false;
+            state.success = true;
+            state.data = action.payload;
+        },
+        [editProductImage.rejected]: (state, action) => {
             state.pending = false;
             state.failed = true;
             state.message = action.error.message;

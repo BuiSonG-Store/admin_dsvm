@@ -8,25 +8,30 @@ import {LoadingButton} from '@mui/lab';
 import { useState} from 'react';
 import {unwrapResult} from '@reduxjs/toolkit';
 import {useDispatch} from 'react-redux';
-import {postProductImage} from '../../store/slice/productImage';
+import {editProductImage, postProductImage} from '../../store/slice/productImage';
 // ----------------------------------------------------------------------
 
 export default function CreateFormImage(props) {
     const [values, setValues] = useState(null);
     const dispatch = useDispatch();
-
     const formik = useFormik({
         initialValues: {
             Image: ''
         },
         onSubmit: async () => {
             const formData = new FormData();
-            formData.append('ProductId',props.id );
+            console.log('run');
+            if (props.productEdit){
+                formData.append('ProductId',props.productEdit );
+            }else {
+                formData.append('ProductId',props.id );
+            }
+            console.log(formData.get('ProductId'));
             for (let i = 0; i < values.length; i++) {
                 formData.append('Image', values[i]);
             }
             try {
-                const res = await dispatch(postProductImage(formData));
+                const res = props.productEdit?await dispatch(editProductImage(formData)) :await dispatch(postProductImage(formData));
                 unwrapResult(res);
                 props.submitImage({res:res.payload});
             } catch (e) {

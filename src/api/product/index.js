@@ -19,6 +19,9 @@ export const productApi = {
     },
     postImage: async (data,config)=>{
         return await axios.post(url+'ProductImage',data,config);
+    },
+    editProductImage: async (data,config)=>{
+        return await axios.put(url+`ProductImage/${data.get('ProductId')}`,data,config);
     }
 
 };

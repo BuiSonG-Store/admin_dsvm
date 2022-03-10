@@ -110,7 +110,7 @@ export default function CreateForm(props) {
                         ProvinceId: values.ProvinceId,
                         Amount: values.Amount,
                         Dvt:values.Dvt,
-                        Weight: `${values.Weight}/${typeOfWeight}`
+                        Weight: `${values.Weight}${typeOfWeight}`
                     }))
                 ;
                 unwrapResult(res);

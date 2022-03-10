@@ -10,6 +10,8 @@ import Blog from './pages/Blog';
 import User from './pages/User';
 import NotFound from './pages/Page404';
 import Bill from './pages/Bill';
+import Category from './pages/Category';
+import Region from './pages/Region';
 
 // ----------------------------------------------------------------------
 
@@ -22,6 +24,8 @@ export default function Router() {
                 { element: <Navigate to='/dashboard/app' replace /> },
                 { path: 'app', element: <DashboardApp /> },
                 { path: 'user', element: <User /> },
+                { path: 'category', element: <Category /> },
+                { path: 'region', element: <Region /> },
                 { path: 'products', element: <Products /> },
                 { path: 'blog', element: <Blog /> },
                 { path: 'bill', element: <Bill /> }

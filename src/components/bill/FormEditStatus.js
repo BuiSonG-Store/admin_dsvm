@@ -61,8 +61,8 @@ export default function FormEditStatus(props) {
                         error={Boolean(touched.Status && errors.Status)}
                         helperText={touched.Status && errors.Status}
                     >
-                        <MenuItem value={'Đang xác nhận'}>Đang xác nhận</MenuItem>
-                        <MenuItem value={'Đang giao'}>Đang giao</MenuItem>
+                        <MenuItem value={'Đang Xác Nhận'}>Đang xác nhận</MenuItem>
+                        <MenuItem value={'Đang Giao'}>Đang giao</MenuItem>
                         <MenuItem value={'Giao Thành Công'}>Giao Thành Công</MenuItem>
                         <MenuItem value={'Giao Thất Bại'}>Giao Thất Bại</MenuItem>
                     </Select>

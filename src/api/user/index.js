@@ -11,8 +11,8 @@ export const userApi = {
     deleteUser: async (id,config) => {
         return await axios.delete(url + `Accounts/${id}`,config);
     },
-    editUser: async (data) => {
-        return await axios.put(url + `Accounts/${data.id}`, data);
+    editUser: async (data,config) => {
+        return await axios.put(url + `Accounts/${data.id}`, data,config);
     },
     getUserById: async (id)=>{
         return await  axios.get(url+`Accounts/id?id=${id}`);

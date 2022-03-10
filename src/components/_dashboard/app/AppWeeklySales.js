@@ -5,6 +5,8 @@ import { alpha, styled } from '@mui/material/styles';
 import { Card, Typography } from '@mui/material';
 // utils
 import { fShortenNumber } from '../../../utils/formatNumber';
+import  {useState,useEffect} from 'react';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -34,17 +36,29 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 714000;
+// const TOTAL = 714000;
 
 export default function AppWeeklySales() {
+    const [total,setTotal] = useState(0);
+    useEffect(()=>{
+        fetchData();
+    },[]);
+    const fetchData = async()=>{
+        try {
+            let res = await axios.get('https://localhost:44349/api/Bills');
+            setTotal(res.data.$values.length);
+        } catch (e) {
+            console.log(e);
+        }
+    };
     return (
         <RootStyle>
             <IconWrapperStyle>
                 <Icon icon={androidFilled} width={24} height={24} />
             </IconWrapperStyle>
-            <Typography variant='h3'>{fShortenNumber(TOTAL)}</Typography>
+            <Typography variant='h3'>{fShortenNumber(total)}</Typography>
             <Typography variant='subtitle2' sx={{ opacity: 0.72 }}>
-                Weekly Sales
+                Số đơn hàng đã đặt
             </Typography>
         </RootStyle>
     );

@@ -17,7 +17,7 @@ export const getUsers = createAsyncThunk('Get Users', async () => {
 });
 
 export const editUser = createAsyncThunk('Edit User', async (params) => {
-    const res = await userApi.editUser(params);
+    const res = await userApi.editUser(params,{headers});
     return res.data;
 });
 

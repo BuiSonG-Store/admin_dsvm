@@ -82,6 +82,7 @@ export default function EcommerceShop() {
         try {
             const res = await dispatch(getProduct());
             setData(res.payload);
+
             unwrapResult(res);
         } catch (e) {
             console.log(e);

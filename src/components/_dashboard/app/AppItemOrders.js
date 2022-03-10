@@ -5,6 +5,9 @@ import { alpha, styled } from '@mui/material/styles';
 import { Card, Typography } from '@mui/material';
 // utils
 import { fShortenNumber } from '../../../utils/formatNumber';
+import axios from 'axios';
+import addAxiosHearder from '../../../utils/addAxiosHeader';
+import { useState,useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -31,20 +34,32 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
         0.24
     )} 100%)`
 }));
-
+const headers=addAxiosHearder();
 // ----------------------------------------------------------------------
 
-const TOTAL = 1723315;
 
 export default function AppItemOrders() {
+    const [total,setTotal] = useState(0);
+
+    useEffect(()=>{
+        fetchData();
+    },[]);
+    const fetchData = async()=>{
+        try {
+            let res = await axios.get('https://localhost:44349/api/Products',{headers});
+            setTotal(res.data.$values.length);
+        } catch (e) {
+            console.log(e);
+        }
+    };
     return (
         <RootStyle>
             <IconWrapperStyle>
                 <Icon icon={windowsFilled} width={24} height={24} />
             </IconWrapperStyle>
-            <Typography variant='h3'>{fShortenNumber(TOTAL)}</Typography>
+            <Typography variant='h3'>{fShortenNumber(total)}</Typography>
             <Typography variant='subtitle2' sx={{ opacity: 0.72 }}>
-                Item Orders
+                Số sản phẩm
             </Typography>
         </RootStyle>
     );

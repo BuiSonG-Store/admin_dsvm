@@ -8,7 +8,7 @@ import ProductListToolbar from './ProductListToolbar';
 // ----------------------------------------------------------------------
 
 ProductList.propTypes = {
-    products: PropTypes.array.isRequired
+    items: PropTypes.array.isRequired
 };
 
 export default function ProductList({items, handleClickProductName,handleDeleteProduct, ...other}) {

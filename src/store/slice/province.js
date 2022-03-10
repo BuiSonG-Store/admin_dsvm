@@ -10,8 +10,8 @@ const initialState = {
     data: []
 };
 
-export const getProvinces = createAsyncThunk('get list province', async () => {
-    const res = await provinceApi.getProvinces();
+export const getProvinces = createAsyncThunk('get list province', async (params) => {
+    const res = await provinceApi.getProvinces(params);
     return res.data;
 });
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
-const url = 'https://provinces.open-api.vn/api/?depth=3';
+const url = 'https://localhost:44349/api/Provinces/';
 export const provinceApi = {
-    getProvinces: async () => {
-        return await axios.get(url);
+    getProvinces: async (params) => {
+        return await axios.get(url+params);
     }
 };

@@ -77,7 +77,6 @@ function applySortFilter(array, comparator, query) {
                 _user.phoneNumber.toLowerCase().indexOf(query.toLowerCase()) !== -1
         );
     }
-
     return stabilizedThis.map((el) => el[0]);
 }
 
@@ -188,14 +187,11 @@ export default function Bill() {
 
     const configColorForItemRow = (status) => {
         switch (status) {
-            case'Đang giao': {
+            case'Đang Giao': {
                 return 'yellow';
             }
             case 'Giao Thành Công': {
                 return 'green';
-            }
-            case 'Đang Xác Nhận': {
-                return 'yellow';
             }
             case 'Giao Thất Bại': {
                 return 'red';
@@ -310,6 +306,7 @@ export default function Bill() {
                                                             name={userName}
                                                             clickButtonEdit={clickButtonEdit}
                                                             clickButtonDetail={clickButtonDetail}
+                                                            isDetail={true}
                                                         />
                                                     </TableCell>
                                                 </TableRow>

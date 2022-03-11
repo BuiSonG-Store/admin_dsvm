@@ -22,7 +22,7 @@ export default function CreateForm(props) {
     const [categories, setCategories] = useState([]);
     const [regions, setRegions] = useState([]);
     const [dvts, setDvt] = useState([]);
-    const [typeOfWeight, setTypeOfWeight] = useState('');
+    const [typeOfWeight, setTypeOfWeight] = useState('g');
     const [weights, setWeight] = useState([]);
     const [provinces, setProvinces] = useState([]);
     const dispatch=useDispatch();

@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import {useState} from 'react';
-import {Link as RouterLink, useNavigate} from 'react-router-dom';
+import {Link as RouterLink} from 'react-router-dom';
 import {useFormik, Form, FormikProvider} from 'formik';
 import {Icon} from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
@@ -24,7 +24,6 @@ Date.prototype.addDays = function(days) {
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
-    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const dispatch = useDispatch();
 
@@ -46,7 +45,7 @@ export default function LoginForm() {
                 const user=res.payload;
                 setSessionStorage(user);
                 resetForm();
-                navigate('/dashboard/app', {replace: true});
+                window.location.href='/dashboard/app';
             } catch (e) {
                 console.log(e);
             }

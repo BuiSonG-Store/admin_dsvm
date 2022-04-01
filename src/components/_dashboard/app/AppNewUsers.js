@@ -45,7 +45,7 @@ export default function AppNewUsers() {
     },[]);
     const fetchData = async()=>{
         try {
-            let res = await axios.get('https://localhost:44349/api/Accounts',{headers});
+            let res = await axios.get(process.env.REACT_APP_HOST +'/api/Accounts',{headers});
             setTotal(res.data.$values.length);
         } catch (e) {
             console.log(e);

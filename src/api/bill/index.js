@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'https://localhost:44349/api/';
+const url = process.env.REACT_APP_HOST +'/api/';
 export const billApi = {
     getData: async () => {
         return await axios.get(url+'Bills');

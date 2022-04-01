@@ -7,7 +7,7 @@ import {styled} from '@mui/material/styles';
 import {fCurrency} from '../../../utils/formatNumber';
 //
 // ----------------------------------------------------------------------
-const urlImage = 'https://localhost:44349/uploads/';
+const urlImage = process.env.REACT_APP_HOST +'/uploads/';
 
 const ProductImgStyle = styled('img')({
     top: 0,

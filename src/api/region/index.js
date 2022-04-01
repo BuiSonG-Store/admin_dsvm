@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-const url='https://localhost:44349/api/Regions/';
+const url=process.env.REACT_APP_HOST + '/api/Regions/';
 export const regionApi = {
     getData: async () => {
         return await axios.get(url);
     },
-    getRegionById: async (id,config)=>{
-        return await  axios.get(url+id,config);
+    getRegionById: async (id)=>{
+        return await  axios.get(url+id);
     },
     createRegion: async (data,config) => {
         return await axios.post(url, data,config);

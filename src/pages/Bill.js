@@ -32,19 +32,24 @@ import ListBill from '../components/bill/ListBill';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-    {id: 'userName', label: 'User Name', alignRight: false},
-    {id: 'phoneNumber', label: 'Phone Number', alignRight: false},
-    {id: 'address', label: 'Address', alignRight: false},
-    {id: 'productName', label: 'Product Name', alignRight: false},
-    {id: 'productPrice', label: 'Product Price', alignRight: false},
-    {id: 'total', label: 'Total', alignRight: false},
-    {id: 'oderTime', label: 'Oder Time', alignRight: false},
-    {id: 'status', label: 'Status', alignRight: false},
+    {id: 'userName', label: 'Tên', alignRight: false},
+    {id: 'phoneNumber', label: 'SĐT', alignRight: false},
+    {id: 'address', label: 'Địa chỉ', alignRight: false},
+    {id: 'productName', label: 'Sản phẩm', alignRight: false},
+    {id: 'productPrice', label: 'Gía lẻ', alignRight: false},
+    {id: 'total', label: 'Tổng', alignRight: false},
+    {id: 'oderTime', label: 'Tgian đặt hàng', alignRight: false},
+    {id: 'status', label: 'Trạng thái', alignRight: false},
     {id: ''},
 ];
 
 // ----------------------------------------------------------------------
-
+function fCurrency(number) {
+    return number.toLocaleString('it-IT', {
+        style: 'currency',
+        currency: 'VND'
+    });
+}
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -294,9 +299,9 @@ export default function Bill() {
                                                         align="left"
                                                         style={{overflowWrap: 'anywhere'}}
                                                     >
-                                                        {productPrice}
+                                                        {fCurrency(productPrice)}
                                                     </TableCell>
-                                                    <TableCell align="left">{total}</TableCell>
+                                                    <TableCell align="left">{fCurrency(total)}</TableCell>
                                                     <TableCell align="left">{oderTime}</TableCell>
                                                     <TableCell align="left">{status}</TableCell>
 

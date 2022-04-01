@@ -46,7 +46,7 @@ export default function AppItemOrders() {
     },[]);
     const fetchData = async()=>{
         try {
-            let res = await axios.get('https://localhost:44349/api/Products',{headers});
+            let res = await axios.get(process.env.REACT_APP_HOST +'/api/Products',{headers});
             setTotal(res.data.$values.length);
         } catch (e) {
             console.log(e);

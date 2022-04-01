@@ -269,11 +269,8 @@ export default function CreateForm(props) {
                         error={Boolean(touched.Name && errors.Name)}
                         helperText={touched.Name && errors.Name}
                     />
-                    <TextField
-                        fullWidth
+                    <textarea
                         autoComplete='productDescription'
-                        type='text'
-                        label='Description'
                         value={values.Description}
                         {...getFieldProps('Description')}
                         error={Boolean(touched.Description && errors.Description)}

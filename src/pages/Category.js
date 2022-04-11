@@ -242,8 +242,6 @@ export default function Category() {
                                                             </Typography>
                                                         </Stack>
                                                     </TableCell>
-
-
                                                     <TableCell align="right">
                                                         <UserMoreMenu userId={id} clickButtonEdit={clickButtonEdit}/>
                                                     </TableCell>

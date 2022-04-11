@@ -97,7 +97,7 @@ export default function CreateForm(props) {
                         ProvinceId: values.ProvinceId,
                         Amount: values.Amount,
                         Dvt:values.Dvt,
-                        Weight: `${values.Weight}/${typeOfWeight}`
+                        Weight: `${values.Weight}${typeOfWeight}`
                     }))
 
                     :dispatch(postProduct({
@@ -154,7 +154,6 @@ export default function CreateForm(props) {
                     id="demo-simple-select"
                     value={values.RegionId}
                     {...getFieldProps('RegionId')}
-
                 >
                     {regions.map((item) => (
                         <MenuItem onClick={ async ()=>{
@@ -184,12 +183,10 @@ export default function CreateForm(props) {
                     id="demo-simple-select"
                     value={values.ProvinceId}
                     {...getFieldProps('ProvinceId')}
-
                 >
                     {provinces.map((item) => (
                         <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
                     ))}
-
                 </Select>
             </Stack>
         );
@@ -254,7 +251,6 @@ export default function CreateForm(props) {
             </Stack>
         );
     };
-
     return (
         <FormikProvider value={formik}>
             <Form autoComplete='off' noValidate onSubmit={handleSubmit}>

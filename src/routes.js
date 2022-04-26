@@ -1,8 +1,6 @@
 import { Navigate, useRoutes } from 'react-router-dom';
-// layouts
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
-//
 import Login from './pages/Login';
 import DashboardApp from './pages/DashboardApp';
 import Products from './pages/Products';
@@ -13,7 +11,6 @@ import Bill from './pages/Bill';
 import Category from './pages/Category';
 import Region from './pages/Region';
 
-// ----------------------------------------------------------------------
 
 export default function Router() {
     return useRoutes([

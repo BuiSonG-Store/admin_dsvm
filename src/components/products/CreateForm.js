@@ -16,17 +16,22 @@ import {getCategory} from '../../store/slice/category';
 import {getProvinces} from '../../store/slice/province';
 import {getDvt} from '../../store/slice/dvt';
 import {getWeight} from '../../store/slice/weight';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 // ----------------------------------------------------------------------
 
 export default function CreateForm(props) {
     const [categories, setCategories] = useState([]);
     const [regions, setRegions] = useState([]);
     const [dvts, setDvt] = useState([]);
+    const [checkHotProduct] = useState([true, false]);
     const [typeOfWeight, setTypeOfWeight] = useState('g');
     const [weights, setWeight] = useState([]);
     const [provinces, setProvinces] = useState([]);
     const dispatch=useDispatch();
     const productEdit=props.dataEdit.product;
+
+    const [bodyDes,setBodyDes] = useState('');
 
     useEffect(() => {
         fetchData();
@@ -50,8 +55,6 @@ export default function CreateForm(props) {
         }
     };
 
-
-
     const initialValues={
         Name: productEdit?productEdit.name:'',
         Description: productEdit?productEdit.description:'',
@@ -59,15 +62,15 @@ export default function CreateForm(props) {
         PriceSale:productEdit?productEdit.priceSale:0.0,
         CategoryId:productEdit?productEdit.categoryId:'',
         RegionId:productEdit?productEdit.regionId:'',
-        ProvinceId:productEdit?productEdit.ProvinceId:'',
-        Dvt:productEdit?productEdit.Dvt:'',
-        Amount:productEdit?productEdit.Amount:'',
-        Weight:productEdit?productEdit.Weight:'',
+        ProvinceId:productEdit?productEdit.provinceId:'',
+        Dvt:productEdit?productEdit.dvt:'',
+        Amount:productEdit?productEdit.amount:'',
+        Weight:productEdit?productEdit.weight:'',
+        CheckHotProduct:productEdit&&productEdit.checkHotProduct.toString(),
     };
 
     const ProductSchema = Yup.object().shape({
         Name: Yup.string().required(),
-        Description: Yup.string().required(),
         Price: Yup.number().required(),
         PriceSale: Yup.number(),
         CategoryId: Yup.number().required(),
@@ -89,7 +92,7 @@ export default function CreateForm(props) {
                     dispatch(editProduct({
                         id:productEdit.id,
                         Name: values.Name,
-                        Description: values.Description,
+                        Description: bodyDes,
                         Price: values.Price,
                         PriceSale: values.PriceSale,
                         CategoryId: values.CategoryId,
@@ -97,12 +100,13 @@ export default function CreateForm(props) {
                         ProvinceId: values.ProvinceId,
                         Amount: values.Amount,
                         Dvt:values.Dvt,
+                        CheckHotProduct:values.CheckHotProduct,
                         Weight: `${values.Weight}${typeOfWeight}`
                     }))
 
                     :dispatch(postProduct({
                         Name: values.Name,
-                        Description: values.Description,
+                        Description: bodyDes,
                         Price: values.Price,
                         PriceSale: values.PriceSale,
                         CategoryId: values.CategoryId,
@@ -110,6 +114,7 @@ export default function CreateForm(props) {
                         ProvinceId: values.ProvinceId,
                         Amount: values.Amount,
                         Dvt:values.Dvt,
+                        CheckHotProduct:values.CheckHotProduct,
                         Weight: `${values.Weight}${typeOfWeight}`
                     }))
                 ;
@@ -126,13 +131,12 @@ export default function CreateForm(props) {
 
     const renderCategory = (values,getFieldProps) => {
         return (
-            <Stack spacing={3} style={{width:400}}>
+            <Stack spacing={4} style={{width:200}}>
                 <InputLabel id="demo-simple-select-label">Category</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={values.CategoryId}
-                    // onChange={(e) => handleSelectProvince(e)}
                     {...getFieldProps('CategoryId')}
 
                 >
@@ -157,7 +161,6 @@ export default function CreateForm(props) {
                 >
                     {regions.map((item) => (
                         <MenuItem onClick={ async ()=>{
-                            console.log('region');
                             try {
                                 const province =await dispatch(getProvinces(item.id));
                                 unwrapResult(province);
@@ -192,10 +195,9 @@ export default function CreateForm(props) {
         );
     };
 
-
     const renderDvt = (values,getFieldProps) => {
         return (
-            <Stack spacing={3} style={{width:200}}>
+            <Stack spacing={4} style={{width:200}}>
                 <InputLabel id="demo-simple-select-label">Đơn vị</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
@@ -211,9 +213,27 @@ export default function CreateForm(props) {
         );
     };
 
+    const renderHotProduct = (values,getFieldProps) => {
+        return (
+            <Stack spacing={4} style={{width:200}}>
+                <InputLabel id="demo-simple-select-label">Sp Hot</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    defaultValue={values.CheckHotProduct}
+                    {...getFieldProps('CheckHotProduct')}
+                >
+                    {checkHotProduct.map((item, index) => (
+                        <MenuItem key={index} value={item} >{item.toString()}</MenuItem>
+                    ))}
+                </Select>
+            </Stack>
+        );
+    };
+
     const renderWeight = (values,getFieldProps) => {
         return (
-            <Stack spacing={3} style={{width:350}}>
+            <Stack spacing={4} style={{width:300}}>
                 <InputLabel id="demo-simple-select-label">Khối lượng</InputLabel>
                 <div style={{
                     display:'flex',
@@ -251,6 +271,35 @@ export default function CreateForm(props) {
             </Stack>
         );
     };
+
+    CreateForm.modules = {
+        toolbar:[
+            [{header:'1'},{header:'2'},{header:[3,4,5,6]},{font:[]}],
+            [{size:[]}],
+            ['bold','italic','underline','strike','blockquote'],
+            [{list:'ordered'},{list:'bullet'}],
+            ['link','image','video'],
+            ['clean'],
+            ['code-block'],
+        ],
+    };
+    CreateForm.formats = [
+        'header',
+        'font',
+        'size',
+        'bold',
+        'italic',
+        'underline',
+        'strike',
+        'blockquote',
+        'list',
+        'bullet',
+        'link',
+        'image',
+        'video',
+        'code-block'
+    ];
+
     return (
         <FormikProvider value={formik}>
             <Form autoComplete='off' noValidate onSubmit={handleSubmit}>
@@ -265,12 +314,12 @@ export default function CreateForm(props) {
                         error={Boolean(touched.Name && errors.Name)}
                         helperText={touched.Name && errors.Name}
                     />
-                    <textarea
-                        autoComplete='productDescription'
-                        value={values.Description}
-                        {...getFieldProps('Description')}
-                        error={Boolean(touched.Description && errors.Description)}
-                        helperText={touched.Description && errors.Description}
+                    <ReactQuill
+                        placeholder={'some thing like ....'}
+                        value={bodyDes}
+                        onChange={(e)=>setBodyDes(e)}
+                        modules={CreateForm.modules}
+                        formats={CreateForm.formats}
                     />
                     <div style={{
                         display:'flex',
@@ -315,6 +364,7 @@ export default function CreateForm(props) {
                         {renderCategory(values,getFieldProps)}
                         {renderDvt(values,getFieldProps)}
                         {renderWeight(values,getFieldProps)}
+                        {renderHotProduct(values,getFieldProps)}
                     </div>
 
                     <div style={{display:'flex',justifyContent:'space-between'}}>

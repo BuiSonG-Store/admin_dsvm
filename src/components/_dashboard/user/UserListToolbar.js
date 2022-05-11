@@ -54,7 +54,6 @@ export default function UserListToolbar({numSelected, filterName, onFilterName, 
 
     const handleRemove = () => {
         selected.forEach(async (id) => {
-            console.log(id);
             try {
                 const res = await dispatch(deleteUser(id));
                 unwrapResult(res);

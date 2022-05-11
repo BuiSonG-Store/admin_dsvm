@@ -106,7 +106,6 @@ export default function Bill() {
     }, [isEdit]);
     useEffect(() => {
         let datas = data.filter((item) => item.userName === name);
-        console.log('first', datas);
         setDataBill(datas);
     }, [name]);
 
@@ -114,7 +113,6 @@ export default function Bill() {
         try {
             const res = await dispatch(getBills());
             setData(res.payload);
-            console.log(res.payload);
             unwrapResult(res);
         } catch (e) {
             console.log(e);
@@ -207,7 +205,7 @@ export default function Bill() {
     const isUserNotFound = filteredBills.length === 0;
 
     return (
-        <Page title="User | Minimal-UI">
+        <Page title="User | Đặc sản vùng miền Việt Nam">
             <Container>
                 <Stack
                     direction="row"
@@ -261,7 +259,6 @@ export default function Bill() {
                                                 phoneNumber,
                                                 address,
                                             } = row;
-                                            console.log(productPrice);
                                             const isItemSelected = selected.indexOf(id) !== -1;
                                             return (
                                                 <TableRow

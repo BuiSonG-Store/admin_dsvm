@@ -33,7 +33,6 @@ export default function ProductList({items, handleClickProductName,handleDeleteP
     };
 
     const handleDelete=(value)=>{
-        console.log(value);
         setSelected([]);
         handleDeleteProduct(value);
     };

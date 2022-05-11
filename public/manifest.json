@@ -3,12 +3,12 @@
   "name": "Admin - DSVM",
   "icons": [
     {
-      "src": "favicon/logo.png",
+      "src": "static/logo.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "favicon/logo.png",
+      "src": "static/logo.png",
       "sizes": "512x512",
       "type": "image/png"
     }

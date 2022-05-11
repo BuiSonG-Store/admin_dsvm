@@ -20,13 +20,11 @@ export default function CreateFormImage(props) {
         },
         onSubmit: async () => {
             const formData = new FormData();
-            console.log('run');
             if (props.productEdit){
                 formData.append('ProductId',props.productEdit );
             }else {
                 formData.append('ProductId',props.id );
             }
-            console.log(formData.get('ProductId'));
             for (let i = 0; i < values.length; i++) {
                 formData.append('Image', values[i]);
             }

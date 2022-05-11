@@ -109,7 +109,6 @@ export default function EcommerceShop() {
     };
 
     const handleChangeRowsPerPage = (event) => {
-        console.log(parseInt(event.target.value, 10));
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
@@ -161,11 +160,11 @@ export default function EcommerceShop() {
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
     const filteredProducts = applySortFilter(data, getComparator(order, orderBy), filterName);
 
-    const dataOfPage = filteredProducts.filter(item => item.product.name !== undefined)
+    const dataOfPage = filteredProducts.reverse().filter(item => item.product.name !== undefined)
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     return (
-        <Page title="Dashboard: Products | Minimal-UI">
+        <Page title="Dashboard: Products | Đặc sản vùng miền Việt Nam">
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" sx={{mb: 5}}>

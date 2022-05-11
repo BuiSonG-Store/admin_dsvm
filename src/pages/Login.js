@@ -38,7 +38,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Login() {
     return (
-        <RootStyle title='Login | Minimal-UI'>
+        <RootStyle title='Login | Đặc sản vùng miền Việt Nam'>
 
             <MHidden width='mdDown'>
                 <SectionStyle>
